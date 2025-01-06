@@ -1793,3 +1793,15 @@ Caused by: org.h2.mvstore.MVStoreException: The file is locked: C:/project/recip
 	at org.h2.mvstore.FileStore.open(FileStore.java:163)
 	at org.h2.mvstore.MVStore.<init>(MVStore.java:449)
 	... 55 more
+2025-01-06 19:49:07 jdbc[53]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "select * [*]receipe"; SQL statement:
+select * receipe [42000-212]
+2025-01-06 19:49:07 jdbc[53]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "select * [*]receipe"; SQL statement:
+select * receipe [42000-212]
+2025-01-06 19:49:15 jdbc[53]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "RECEIPE" not found; SQL statement:
+select * from receipe [42102-212]
+2025-01-06 19:49:21 jdbc[53]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "RECEIPES" not found; SQL statement:
+select * from receipes [42102-212]

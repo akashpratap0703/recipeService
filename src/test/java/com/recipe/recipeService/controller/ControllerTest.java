@@ -36,19 +36,12 @@ class ControllerTest {
     }
 
     @Test
-    void testHello() throws Exception {
-        mockMvc.perform(get("/hello"))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Hello World"));
-    }
-
-    @Test
     void testSaveRecipes() throws Exception {
         // Prepare mock data
         List<Recipe> recipes = new ArrayList<>();
         Recipe recipe = new Recipe();
-        recipe.setId(1);
-        recipe.setName("Pasta");
+        recipe.setId(2001);
+        recipe.setName("Classic Margherita Pizza");
         recipes.add(recipe);
 
         // Mock service behavior
@@ -56,9 +49,10 @@ class ControllerTest {
 
         mockMvc.perform(post("/recipes/list")
                         .contentType("application/json")
-                        .content("[{\"name\":\"Pasta\",\"prepTimeMinutes\":10}]"))
+                        .content("[{ \"id\": 2001,\"name\":\"Classic Margherita Pizza\",\"ingredients\":[\"Pizza dough\",\"Tomato sauce\",\"Fresh mozzarella cheese\",\"Fresh basil leaves\",\"Olive oil\",\"Salt and pepper to taste\"],\"instructions\":[\"Preheat the oven to 475°F (245°C).\",\"Roll out the pizza dough and spread tomato sauce evenly.\",\"Top with slices of fresh mozzarella and fresh basil leaves.\",\"Drizzle with olive oil and season with salt and pepper.\",\"Bake in the preheated oven for 12-15 minutes or until the crust is golden brown.\",\"Slice and serve hot.\"],\"prepTimeMinutes\":20,\"cookTimeMinutes\":15,\"servings\":4,\"difficulty\":\"Easy\",\"cuisine\":\"Italian\",\"caloriesPerServing\":300,\"tags\":[\"Pizza\",\"Italian\"],\"userId\":166,\"image\":\"https://cdn.dummyjson.com/recipe-images/1.webp\",\"rating\":4.6,\"reviewCount\":98,\"mealType\":[\"Dinner\"]}]"
+                        ))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name", is("Pasta")));
+                .andExpect(jsonPath("$[0].name", is("Classic Margherita Pizza")));
 
         // Verify interaction with the service
         verify(recipeService, times(1)).saveRecipes(recipes);
@@ -105,11 +99,12 @@ class ControllerTest {
     @Test
     void testGetRecipeByIdNotFound() throws Exception {
         // Mock service behavior to throw exception
-        when(recipeService.getRecipeById(1)).thenThrow(new ResourceNotFoundException("Recipe with ID 1 not found"));
+        when(recipeService.getRecipeById(1000)).thenThrow(new ResourceNotFoundException("Recipe with ID 1000 not found"));
 
         mockMvc.perform(get("/recipes/list/1000"))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message", is("Resource Not Found")));
+                .andExpect(status().isNotFound()) // Ensure the status is 404
+                .andExpect(jsonPath("$.error", is("Resource Not Found"))) // Check the error key
+                .andExpect(jsonPath("$.message", is("Recipe with ID 1000 not found"))); // Check the detailed error message
     }
 
     @Test
@@ -125,7 +120,7 @@ class ControllerTest {
         when(recipeService.searchRecipes("Pasta")).thenReturn(recipes);
 
         mockMvc.perform(get("/recipes/search")
-                        .param("searchParan", "Pasta"))
+                        .param("searchParam", "Pasta"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name", is("Pasta")));
 

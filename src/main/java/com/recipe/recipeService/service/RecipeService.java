@@ -39,11 +39,7 @@ public class RecipeService {
     public void loadRecipesFromAPI() {
         String url = "https://dummyjson.com/recipes";
         logger.info("Fetching recipes from API: {}", url);
-
-        // Fetch data from the API
         RecipeApiResponse apiResponse = restTemplate.getForObject(url, RecipeApiResponse.class);
-
-        // Save the recipes into the H2 database
         if (apiResponse != null && apiResponse.getRecipes() != null) {
             logger.info("Fetched {} recipes from API, saving them to the database", apiResponse.getRecipes().size());
             recipeRepository.saveAll(apiResponse.getRecipes());
