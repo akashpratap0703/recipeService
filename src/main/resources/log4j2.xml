@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+
+    <!-- Define properties for log file location and log pattern -->
+    <Properties>
+        <Property name="log-path">logs/</Property>
+        <Property name="log-file-name">app.log</Property>
+        <Property name="log-pattern">%d{yyyy-MM-dd HH:mm:ss} - %msg%n</Property>
+    </Properties>
+
+    <!-- Define the Console Appender (optional) -->
+    <Appenders>
+        <!-- Console output for logs -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${log-pattern}"/>
+        </Console>
+
+        <!-- Rolling File Appender for time-based rollover -->
+        <RollingFile name="RollingFile" fileName="${log-path}${log-file-name}"
+                     filePattern="${log-path}${log-file-name}-%d{yyyy-MM-dd_HH-mm}.log">
+            <PatternLayout>
+                <Pattern>${log-pattern}</Pattern>
+            </PatternLayout>
+
+            <!-- Time-based Rolling Policy (rollover every 15 minutes) -->
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="15" modulate="true"/>
+            </Policies>
+
+            <!-- Maximum file size and number of files to keep -->
+            <DefaultRolloverStrategy max="30" fileIndex="min"/>
+        </RollingFile>
+    </Appenders>
+
+    <!-- Define Loggers -->
+    <Loggers>
+        <!-- Root logger configuration -->
+        <Root level="info">
+            <AppenderRef ref="RollingFile"/>
+            <AppenderRef ref="Console"/>
+        </Root>
+
+        <!-- Example of a custom logger for your application (if needed) -->
+        <Logger name="com.recipe" level="debug" additivity="false">
+            <AppenderRef ref="RollingFile"/>
+            <AppenderRef ref="Console"/>
+        </Logger>
+    </Loggers>
+
+</Configuration>
